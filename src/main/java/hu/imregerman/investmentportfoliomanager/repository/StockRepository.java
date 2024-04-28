@@ -39,7 +39,7 @@ public interface StockRepository extends JpaRepository<Transaction, UUID> {
                 ) d ON d.stockId = s.id
             WHERE u.userName = :userName
               AND t.transactionGroupClosedId IS NULL
-            GROUP BY s.id, d.sumDividendPrice
+            GROUP BY s.id, s.symbol, s.name, d.sumDividendPrice
             """)
     List<UserStockDTO> findUserAllStocks(String userName);
 
@@ -104,7 +104,7 @@ public interface StockRepository extends JpaRepository<Transaction, UUID> {
                 ) d ON d.stockId = s.id
             WHERE u.userName = :userName
               AND t.transactionGroupClosedId IS NOT NULL
-            GROUP BY t.transactionGroupClosedId, s.id, d.sumDividendPrice
+            GROUP BY t.transactionGroupClosedId, s.id, s.symbol, s.name, d.sumDividendPrice
             """)
     List<ClosedUserStockDTO> findUserAllClosedStocks(String userName);
 }
