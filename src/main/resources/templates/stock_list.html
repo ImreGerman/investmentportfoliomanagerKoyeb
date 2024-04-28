@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css" type="text/css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Investment Portfolio Manager</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-14 my-auto mx-auto">
+            <div class="row">
+                <div class="text-center">
+                    <h1>Actual Portfolio</h1>
+                    <h5 th:if="${not #lists.isEmpty(stockList)}"
+                        th:text="'The current stock price updates automatically every 5 minutes.'"></h5>
+                </div>
+            </div>
+
+            <div class="row mx-auto">
+                <h2></h2><br>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-mg-18 mx-auto">
+                            <table id="stock-list-table" class="table caption-middle align middle">
+                                <thead>
+                                <tr class="text-end fw-bold border-top border-bottom">
+                                    <th>#</th>
+                                    <th class="text-start">Ticker</th>
+                                    <th class="text-start">Stock Name</th>
+                                    <th>Avg Stock Cost Price</th>
+                                    <th>Sum Bought Stock Quantity</th>
+                                    <th>Current Stock Quantity</th>
+                                    <th>Sum Transaction Amount</th>
+                                    <th>Sum Transaction in Foreign Currency</th>
+                                    <th>Current Stock Price</th>
+                                    <th>Unrealized Profit</th>
+                                    <th>ROI %</th>
+                                    <th>Sum Dividend</th>
+                                    <th>ROI % with Dividend</th>
+                                    <th>Portfolio %</th>
+                                    <th class="text-center" colspan="3">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody class="text-end">
+                                <script type="text/javascript" th:src="@{/update-stock-price.js}"></script>
+                                <tr class="border-bottom"
+                                    th:object="${stock}" th:each="stock,stat: ${stockList}"
+                                    th:with="totalSumTransactionAmountInForeignCurrency=${#aggregates.sum(stockList.![sumTransactionAmountInForeignCurrency])}">
+                                    <td th:text="${stat.count}">1</td>
+                                    <td th:text="*{symbol}" data-symbol="*{symbol}" class="text-start">N/A</td>
+                                    <td th:text="*{stockName}" class="text-start">N/A</td>
+                                    <td class="fw-bold fst-italic text-end"
+                                        th:text="*{#numbers.formatDecimal(averageCostPrice, 1, 'WHITESPACE', 2, 'POINT')}"
+                                        data-average-cost-price="*{averageCostPrice}">N/A
+                                    </td>
+                                    <td th:text="*{#numbers.formatDecimal(sumStockQuantity, 1, 'WHITESPACE', 2, 'POINT')}"
+                                        data-sum-stock-quantity="*{sumStockQuantity}">N/A
+                                    </td>
+                                    <td th:text="*{#numbers.formatDecimal(sumRemainingStockQuantity, 1, 'WHITESPACE', 2, 'POINT')}"
+                                        data-sum-remaining-stock-quantity="*{sumRemainingStockQuantity}">N/A
+                                    </td>
+                                    <td th:text="*{#numbers.formatDecimal(sumTransactionAmount, 1, 'WHITESPACE', 0, 'POINT')}">
+                                        N/A
+                                    </td>
+                                    <td th:text="*{#numbers.formatDecimal(sumTransactionAmountInForeignCurrency, 1, 2, 'POINT')}"
+                                        data-sum-transaction-amount-in-foreign-currency="*{sumTransactionAmountInForeignCurrency}">
+                                        N/A
+                                    </td>
+                                    <input type="hidden" id="sumSoldTransactionAmountInForeignCurrency"
+                                           th:value="*{sumSoldTransactionAmountInForeignCurrency}"/>
+                                    <td class="fw-bold text-danger bg-light"></td>
+                                    <td class="bg-light"></td>
+                                    <td class="fw-bold bg-light"></td>
+                                    <td th:text="*{#numbers.formatDecimal(sumDividendPrice, 1, 'WHITESPACE', 2, 'POINT')}"
+                                        data-sum-dividend-price="*{sumDividendPrice}">N/A
+                                    </td>
+                                    <td class="fw-bold bg-light"></td>
+                                    <td class="text-primary fw-bold">
+                                        <span th:with="actual=*{sumTransactionAmountInForeignCurrency}"
+                                              th:text="${#numbers.formatDecimal(actual / totalSumTransactionAmountInForeignCurrency * 100, 1, 2, 'POINT')}">
+                                        </span>%
+                                    </td>
+                                    <td class="text-center">
+                                        <form th:action="@{/stock-transactions}" method="post">
+                                            <input type="hidden" name="stockId" th:value="${stock.id}"/>
+                                            <button class="details_button" type="submit">Details</button>
+                                        </form>
+                                    </td>
+                                    <td class="text-center">
+                                        <form th:action="@{/new-transaction}" method="post">
+                                            <input type="hidden" name="stockId" th:value="${stock.id}"/>
+                                            <button class="new_transaction_button" type="submit">Sell/Buy</button>
+                                        </form>
+                                    </td>
+                                    <td class="text-center">
+                                        <form th:action="@{/stock-dividends}" method="post">
+                                            <input type="hidden" name="stockId" th:value="${stock.id}"/>
+                                            <button class="new_transaction_button" type="submit">Dividends</button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                <tr class="border-top border-bottom fw-bold text-end"
+                                    th:with="totalSumTransactionAmountInForeignCurrency=${#aggregates.sum(stockList.![sumTransactionAmountInForeignCurrency])}">
+                                    <td colspan="5"></td>
+                                    <td>Summary:</td>
+                                    <td th:text="${#numbers.formatDecimal(#aggregates.sum(stockList.![sumTransactionAmount]), 1, 'WHITESPACE', 0, 'POINT')}"></td>
+                                    <td th:text="${#numbers.formatDecimal(totalSumTransactionAmountInForeignCurrency, 1, 2, 'POINT')}"
+                                        total-sum-transaction-amount-in-foreign-currency="*{totalSumTransactionAmountInForeignCurrency}"></td>
+                                    <td></td>
+                                    <td data-total-unrealized-profit></td>
+                                    <td data-total-roi></td>
+                                    <td th:text="${#numbers.formatDecimal(#aggregates.sum(stockList.![sumDividendPrice]), 1, 2, 'POINT')}"></td>
+                                    <td data-total-roi-with-dividend></td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="text-end mt-3">
+                                <a href="/" class="back_button">Back to Main</a>
+                            </div>
+
+                            <div id="apiKeys" style="display: none;" th:attr="data-api-key=${apiKey}">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <form th:action="@{/logout}" method="post">
+        <button class="logout_button" type="submit">Logout</button>
+    </form>
+</div>
+</body>
+</html>

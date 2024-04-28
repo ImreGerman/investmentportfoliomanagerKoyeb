@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css" type="text/css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"></script>-->
+    <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+    <title>Main Page</title>
+</head>
+
+<body>
+<!--Main Navigation-->
+<header>
+    <!-- Sidebar -->
+    <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse">
+        <div class="position-sticky">
+            <div class="list-group list-group-flush mx-3 mt-4">
+
+                <a href="/stock-list" class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
+                    <i class="fas fa-fw me-3"></i><span>Portfolio</span></a>
+
+                <a href="/stocks" class="list-group-item list-group-item-action py-2 ripple">
+                    <i class="fas fa-fw me-3"></i><span>Search Stocks</span></a>
+
+                <a href="#" class="list-group-item list-group-item-action py-2 ripple">
+                    <i class="fas fa-fw me-3"></i><span>All Transactions</span></a>
+
+                <a href="/closed-stock-list" class="list-group-item list-group-item-action py-2 ripple">
+                    <i class="fas fa-fw me-3"></i><span>Closed Positions</span></a>
+
+                <form th:action="@{/logout}" method="post">
+                    <button class="list-group-item list-group-item-action py-2 ripple" type="submit">
+                        <i class="fas fa-fw me-3"></i><span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <!-- Sidebar -->
+
+</header>
+<!--Main Navigation-->
+
+<!--Main layout-->
+<main style="margin-top: 58px;">
+    <div class="container pt-4">
+        <h4>This is a demo program for managing investments. <br>
+            It is currently under development, with basic functionalities operational, but there are still deficiencies
+            present.
+        </h4>
+    </div>
+</main>
+<!--Main layout-->
+
+</body>
+</html>

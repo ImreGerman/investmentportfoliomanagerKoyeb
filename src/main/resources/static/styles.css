@@ -1,0 +1,111 @@
+/* stock_list styles */
+
+html, body {
+    font-family: Raleway;
+ /*   font-variant: small-caps; */
+}
+
+.details_button,
+.new_transaction_button,
+.add_button {
+    background-color: #3498db;
+    color: white;
+    padding: 5px 20px;
+    text-decoration: none;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.details_button:hover {
+    background-color: #2980b9;
+}
+
+.new_transaction_button:hover {
+    background-color: #2980b9;
+}
+
+.add_button:hover {
+    background-color: #2980b9;
+}
+
+.logout_button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.logout_button:hover {
+    color: white;
+    background-color: #2980b9;
+}
+
+.back_button {
+    position: relative;
+    top: 10px;
+    right: 10px;
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.back_button:hover {
+    color: white;
+    background-color: #2980b9;
+}
+
+
+
+/* index styles */
+
+/* Sidebar */
+.sidebar {
+    background-color: rgb(0 0 0 / 5%);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding: 58px 0 0; /* Height of navbar */
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+    width: 240px;
+    z-index: 600;
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    width: 100%;
+  }
+}
+.sidebar .active {
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+.list-group-item {
+    background-color: #3498db;
+    color: white;
+}
+
+.list-group-item span {
+    font-weight: bold;
+}

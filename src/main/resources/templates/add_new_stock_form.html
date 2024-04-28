@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Investment Portfolio Manager</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 my-auto mx-auto">
+            <div class="row">
+                <div class="text-center">
+                    <h1>Add New Stock to Portfolio</h1>
+                </div>
+            </div>
+
+            <div class="row mx-auto">
+                <h2></h2><br>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-mg-10 mx-auto">
+
+                            <table id="stock-list-table" class="table caption-top">
+                                <thead>
+                                <tr class="border-top border-bottom text-start align-middle">
+                                    <th>Transaction Date</th>
+<!--                                    <th>Transaction Type</th>-->
+                                    <th>Transaction Amount</th>
+                                    <th>Stock Price</th>
+                                    <th>Stock Quantity</th>
+                                    <th>Transaction Fee</th>
+                                    <th>Exchange</th>
+                                    <th>Rate</th>
+                                    <th>Transaction Amount in Foreign Currency</th>
+                                </tr>
+                                <tr class="border-bottom">
+                                    <form th:action="@{/add-new-stock}" th:object="${transaction}" method="post">
+                                        <input type="hidden" th:field="*{id}">
+                                        <td><input type="date" th:field="*{transactionDate}" style="width: 130px;"></td>
+<!--                                        <td>-->
+<!--                                            <select th:field="*{transactionType == BUY}" style="width: 100px;">-->
+<!--                                                <option value="BUY" th:selected="${transaction.transactionType == 'BUY'}">BUY</option>-->
+<!--                                                <option value="SELL" th:selected="${transaction.transactionType == 'SELL'}">SELL</option>-->
+<!--                                            </select>-->
+<!--                                        </td>-->
+<!--                                        <input type="hidden" th:text="*{transactionType == 'BUY'}">-->
+                                        <input type="hidden" th:value="${'BUY'}" name="transactionType">
+                                        <td><input type="text" th:field="*{transactionAmount}" style="width: 100px;"></td>
+                                        <td><input type="text" th:field="*{stockPrice}" style="width: 100px;"></td>
+                                        <td><input type="text" th:field="*{stockQuantity}" style="width: 100px;"></td>
+                                        <td><input type="text" th:field="*{transactionFee}" style="width: 100px;"></td>
+                                        <td><input type="text" th:field="*{exchangeName}" style="width: 100px;"></td>
+                                        <td><input type="text" th:field="*{exchangeRate}" style="width: 100px;"></td>
+                                        <td><input type="text" th:field="*{transactionAmountInForeignCurrency}" style="width: 100px;"></td><br><br>
+                                        <input type="hidden" th:field="*{user}">
+                                        <input type="hidden" th:field="*{stock}">
+                                        <td><button class="add_button" type="submit">Submit</button></td>
+
+                                        <div th:if="${#fields.hasAnyErrors()}">
+                                            <ul>
+                                                <li th:each="err : ${#fields.allErrors()}" th:text="${err}" style="color: red;"></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </tr>
+                                </thead>
+                                <tbody class="text-end">
+                                <!-- Itt a többi táblázatsor helye -->
+                                </tbody>
+                            </table>
+
+                            <div class="text-end mt-3">
+                                <a href="/stock-list" class="back_button">Back</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
