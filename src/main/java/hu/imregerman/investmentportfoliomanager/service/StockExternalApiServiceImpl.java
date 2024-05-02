@@ -64,7 +64,7 @@ public class StockExternalApiServiceImpl implements StockExternalApiService {
     }
 
     @Override
-    @Scheduled(cron = "@hourly") // TODO hourly every weekday
+    @Scheduled(cron = "@hourly")
     public int updateStockPriceList() {
         int updateRows = 0;
         SymbolAndPriceListDTO priceList = getStockPriceList();

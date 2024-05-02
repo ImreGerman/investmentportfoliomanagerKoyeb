@@ -28,7 +28,6 @@ import java.util.UUID;
 
 @Slf4j
 @Controller
-//@RequestMapping("/")
 public class StockControllerImpl implements StockController {
 
     StockService stockService;
