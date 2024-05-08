@@ -35,6 +35,7 @@ public interface StockRepository extends JpaRepository<Transaction, UUID> {
                     SELECT d.stock.id AS stockId, SUM(d.dividendPrice) AS sumDividendPrice
                     FROM Dividend d
                     WHERE d.user.userName = :userName
+                      AND d.dividendGroupClosedId IS NULL
                     GROUP BY d.stock.id
                 ) d ON d.stockId = s.id
             WHERE u.userName = :userName
@@ -73,6 +74,7 @@ public interface StockRepository extends JpaRepository<Transaction, UUID> {
                 JOIN d.user u
             WHERE u.userName = :userName
               AND d.stock.id = :stockId
+              AND d.dividendGroupClosedId IS NULL
             """)
     Optional<List<Dividend>> findUserDividendsByStockId(UUID stockId, String userName);
 
@@ -100,6 +102,7 @@ public interface StockRepository extends JpaRepository<Transaction, UUID> {
                     SELECT d.stock.id AS stockId, SUM(d.dividendPrice) AS sumDividendPrice
                     FROM Dividend d
                     WHERE d.user.userName = :userName
+                      AND d.dividendGroupClosedId IS NOT NULL
                     GROUP BY d.stock.id
                 ) d ON d.stockId = s.id
             WHERE u.userName = :userName

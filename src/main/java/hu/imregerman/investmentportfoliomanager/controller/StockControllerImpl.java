@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -48,25 +47,9 @@ public class StockControllerImpl implements StockController {
     @Override
     public String stockList(Model model, @AuthenticationPrincipal User user) {
         List<UserStockDTO> userAllStocks = stockService.getUserAllStocks(user);
+        String generatedRandomUUID = String.valueOf(UUID.randomUUID());
+        stockService.closeStockAndRelatedDividends(userAllStocks, generatedRandomUUID, user);
 
-        for (UserStockDTO stock : userAllStocks) {
-            String generatedRandomUUID = String.valueOf(UUID.randomUUID());
-            if (stock.getSumRemainingStockQuantity() == 0.0) {
-                Optional<List<Dividend>> stockAllDividends = stockService.getStockAllDividends(stock.getId(), user);
-                if (stockAllDividends.isPresent()) {
-                    List<Dividend> dividends = stockAllDividends.get();
-                    for (Dividend dividend : dividends) {
-                        dividend.setDividendGroupClosedId(generatedRandomUUID);
-                    }
-                    dividendService.saveAllStockDividends(dividends);
-                }
-                List<Transaction> stockAllTransactions = stockService.getStockAllTransactions(stock.getId(), user);
-                for (Transaction stockTransaction : stockAllTransactions) {
-                    stockTransaction.setTransactionGroupClosedId(generatedRandomUUID);
-                    stockService.saveTransaction(stockTransaction);
-                }
-            }
-        }
         model.addAttribute("apiKey", stockExternalApiService.getApiKey());
         model.addAttribute("stockList", stockService.getUserAllStocks(user));
         log.info(userAllStocks.toString());

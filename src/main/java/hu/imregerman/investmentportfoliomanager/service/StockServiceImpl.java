@@ -7,7 +7,6 @@ import hu.imregerman.investmentportfoliomanager.model.Dividend;
 import hu.imregerman.investmentportfoliomanager.model.Transaction;
 import hu.imregerman.investmentportfoliomanager.repository.StockRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +21,12 @@ import java.util.UUID;
 public class StockServiceImpl implements StockService {
 
     private StockRepository stockRepository;
+    private DividendService dividendService;
 
-    public StockServiceImpl(StockRepository stockRepository) {
+    public StockServiceImpl(StockRepository stockRepository, DividendService dividendService) {
         this.stockRepository = stockRepository;
+        this.dividendService = dividendService;
     }
-
 
     @Override
     public void saveTransaction(Transaction transaction) {
@@ -70,6 +70,28 @@ public class StockServiceImpl implements StockService {
     @Override
     public Optional<List<Dividend>> getStockAllDividends(UUID stockId, User user) {
         return stockRepository.findUserDividendsByStockId(stockId, user.getUsername());
+    }
+
+    @Override
+    public void closeStockAndRelatedDividends(List<UserStockDTO> userAllStocks, String generatedRandomUUID, User user) {
+        for (UserStockDTO stock : userAllStocks) {
+            if (stock.getSumRemainingStockQuantity() == 0.0) {
+                List<Transaction> stockAllTransactions = getStockAllTransactions(stock.getId(), user);
+                for (Transaction stockTransaction : stockAllTransactions) {
+                    stockTransaction.setTransactionGroupClosedId(generatedRandomUUID);
+                    saveTransaction(stockTransaction);
+                }
+
+                Optional<List<Dividend>> stockAllDividends = getStockAllDividends(stock.getId(), user);
+                if (stockAllDividends.isPresent()) {
+                    List<Dividend> dividends = stockAllDividends.get();
+                    for (Dividend dividend : dividends) {
+                        dividend.setDividendGroupClosedId(generatedRandomUUID);
+                    }
+                    dividendService.saveAllStockDividends(dividends);
+                }
+            }
+        }
     }
 
     @Override

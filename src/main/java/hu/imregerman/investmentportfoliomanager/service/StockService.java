@@ -27,5 +27,7 @@ public interface StockService {
 
     Optional<List<Dividend>> getStockAllDividends(UUID stockID, User user);
 
+    void closeStockAndRelatedDividends(List<UserStockDTO> userAllStocks, String generatedRandomUUID, User user);
+
     List<ClosedUserStockDTO> getUserAllClosedStocks(User user);
 }
