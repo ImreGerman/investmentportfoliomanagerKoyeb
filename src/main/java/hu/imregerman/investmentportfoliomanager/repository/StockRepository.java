@@ -5,6 +5,8 @@ import hu.imregerman.investmentportfoliomanager.dto.StockDTO;
 import hu.imregerman.investmentportfoliomanager.dto.UserStockDTO;
 import hu.imregerman.investmentportfoliomanager.model.Dividend;
 import hu.imregerman.investmentportfoliomanager.model.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -52,6 +54,20 @@ public interface StockRepository extends JpaRepository<Transaction, UUID> {
               AND t.stock.id = :stockId
             """)
     List<Transaction> findUserTransactionsByStockId(UUID stockId, String userName);
+
+    @Query("""
+            SELECT new hu.imregerman.investmentportfoliomanager.dto.StockDTO(
+                   s.id,
+                   s.symbol,
+                   s.name,
+                   s.exchange,
+                   s.type,
+                   s.price,
+                   s.lastUpdate)
+            FROM Stock s
+            WHERE s.lastUpdate IS NOT NULL
+            """)
+    Page<StockDTO> findAllStocks(Pageable pageable);
 
     @Query("""
             SELECT new hu.imregerman.investmentportfoliomanager.dto.StockDTO(

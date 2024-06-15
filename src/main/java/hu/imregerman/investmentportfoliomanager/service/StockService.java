@@ -5,6 +5,7 @@ import hu.imregerman.investmentportfoliomanager.dto.StockDTO;
 import hu.imregerman.investmentportfoliomanager.dto.UserStockDTO;
 import hu.imregerman.investmentportfoliomanager.model.Dividend;
 import hu.imregerman.investmentportfoliomanager.model.Transaction;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
@@ -23,7 +24,9 @@ public interface StockService {
 
     void removeTransaction(String transactionId);
 
-    List<StockDTO> getAllStock(String keyword);
+    Page<StockDTO> getAllStocks(int pageNumber);
+
+    List<StockDTO> getStockByKeyword(String keyword);
 
     Optional<List<Dividend>> getStockAllDividends(UUID stockID, User user);
 

@@ -33,7 +33,7 @@ public interface StockController {
     String deleteTransaction(String transactionId, RedirectAttributes redirectAttributes);
 
     @GetMapping("/stocks")
-    String getAllStock(Model model, String keyword);
+    String getAllStock(int pageNumber, Model model, String keyword);
 
     @PostMapping("/new-stock")
     String createNewStock(Model model, UUID stockId, User user);

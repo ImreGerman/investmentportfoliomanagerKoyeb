@@ -7,6 +7,9 @@ import hu.imregerman.investmentportfoliomanager.model.Dividend;
 import hu.imregerman.investmentportfoliomanager.model.Transaction;
 import hu.imregerman.investmentportfoliomanager.repository.StockRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +66,13 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<StockDTO> getAllStock(String keyword) {
+    public Page<StockDTO> getAllStocks(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, 10);
+        return stockRepository.findAllStocks(pageable);
+    }
+
+    @Override
+    public List<StockDTO> getStockByKeyword(String keyword) {
         return stockRepository.findStockByKeyword(keyword);
     }
 

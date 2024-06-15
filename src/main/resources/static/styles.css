@@ -109,3 +109,8 @@ html, body {
 .list-group-item span {
     font-weight: bold;
 }
+
+.wide-column {
+    width: 30%;
+    white-space: nowrap;
+}

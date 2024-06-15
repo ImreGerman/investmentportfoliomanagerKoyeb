@@ -1,5 +1,6 @@
 package hu.imregerman.investmentportfoliomanager.controller;
 
+import hu.imregerman.investmentportfoliomanager.dto.StockDTO;
 import hu.imregerman.investmentportfoliomanager.dto.UserStockDTO;
 import hu.imregerman.investmentportfoliomanager.model.Dividend;
 import hu.imregerman.investmentportfoliomanager.model.Stock;
@@ -11,6 +12,7 @@ import hu.imregerman.investmentportfoliomanager.service.UserService;
 import hu.imregerman.investmentportfoliomanager.validation.TransactionValidator;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -102,9 +104,20 @@ public class StockControllerImpl implements StockController {
     }
 
     @Override
-    public String getAllStock(Model model, String keyword) {
-        model.addAttribute("stock", stockService.getAllStock(keyword));
-        log.info(stockService.getAllStock(keyword).stream().toList().toString());
+    public String getAllStock(@RequestParam(value = "currentPage", required = false, defaultValue = "1") int pageNumber, Model model, String keyword) {
+        Page<StockDTO> page = stockService.getAllStocks(pageNumber);
+
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("totalElements", page.getTotalElements());
+        model.addAttribute("totalPages", page.getTotalPages());
+
+        if (keyword == null || keyword.isBlank()) {
+            List<StockDTO> pageContent = page.getContent();
+            model.addAttribute("stock", pageContent);
+            return "all_stock";
+        }
+
+        model.addAttribute("stock", stockService.getStockByKeyword(keyword));
         return "all_stock";
     }
 
